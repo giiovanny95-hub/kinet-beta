@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<meta name="referrer" content="no-referrer">
+<title>KINET beta</title>
+<style>
+:root{--bg:#071017;--card:#101A22;--text:#F4F7FA;--muted:#8FA3B8;--accent:#00D5C5;--on-accent:#071017;--border:#263640}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.5 system-ui,sans-serif}
+main{max-width:34rem;margin:0 auto;padding:24px 16px 48px}
+h1{margin:0 0 4px;letter-spacing:.12em}
+h2{font-size:1.05rem;margin:0 0 6px}
+p{margin:0 0 8px}
+.muted{color:var(--muted)}
+section{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;margin:16px 0}
+.btn{display:block;text-align:center;background:var(--accent);color:var(--on-accent);font-weight:700;padding:14px;border-radius:10px;text-decoration:none;margin-top:8px}
+.btn[aria-disabled="true"]{opacity:.4;pointer-events:none}
+.btn:focus-visible{outline:3px solid var(--text);outline-offset:2px}
+#code{font:700 1.8rem/1.2 ui-monospace,monospace;letter-spacing:.1em;text-align:center;user-select:all;padding:8px;border:1px dashed var(--accent);border-radius:8px}
+</style>
+</head>
+<body>
+<main>
+<h1>KINET</h1>
+<p id="intro"></p>
+<p class="muted" id="privacy"></p>
+<section aria-labelledby="h1"><h2 id="h1"></h2><p id="t1"></p><a class="btn" id="dl" href="#"></a></section>
+<section aria-labelledby="h2"><h2 id="h2"></h2><p id="t2"></p><p class="muted" id="t2b"></p></section>
+<section aria-labelledby="h3"><h2 id="h3"></h2><p id="t3"></p></section>
+<section aria-labelledby="h4"><h2 id="h4"></h2><p id="t4"></p>
+<div id="code" aria-live="polite" hidden></div>
+<a class="btn" id="open" href="#" aria-disabled="true"></a>
+<p id="nocode" class="muted"></p></section>
+</main>
+<script>
+var T={es:{intro:'Beta cerrada de KINET, solo para mayores de 18 años.',privacy:'El vídeo se analiza en tu teléfono y nunca sale de él. Compartir datos es opcional y se pregunta dentro de la app.',h1:'1. Descarga la app',t1:'Descarga el APK en tu teléfono Android.',dl:'Descargar APK',h2:'2. Permite la instalación',t2:'Cuando Android lo pida, permite instalar apps desconocidas para tu navegador.',t2b:'Play Protect puede mostrar una advertencia porque la app no viene de Google Play. Es normal en esta beta.',h3:'3. Instala',t3:'Abre el archivo descargado y pulsa Instalar.',h4:'4. Abre KINET con tu código',t4:'Tu código de invitación:',open:'Abrir KINET con mi código',nocode:'Este enlace no trae un código válido. Pide otra invitación.',copy:'Si el botón no abre la app, escribe este código dentro de KINET.'},en:{intro:'KINET closed beta, for adults aged 18 and over only.',privacy:'Video is analyzed on your phone and never leaves it. Sharing data is optional and is asked inside the app.',h1:'1. Download the app',t1:'Download the APK on your Android phone.',dl:'Download APK',h2:'2. Allow installation',t2:'When Android asks, allow installing unknown apps for your browser.',t2b:'Play Protect may show a warning because the app does not come from Google Play. This is expected in this beta.',h3:'3. Install',t3:'Open the downloaded file and tap Install.',h4:'4. Open KINET with your code',t4:'Your invitation code:',open:'Open KINET with my code',nocode:'This link has no valid code. Ask for another invitation.',copy:'If the button does not open the app, type this code inside KINET.'}};
+var CODE_RE=/^[0-9A-HJKMNP-TV-Z]{10}$/;
+function parseCode(hash){var m=/^#i=([^&]*)/.exec(hash||'');if(!m)return null;var c=m[1].toUpperCase();return CODE_RE.test(c)?c:null}
+function repoFrom(loc){var m=/^([a-z0-9-]+)\.github\.io$/i.exec(loc.hostname);var p=loc.pathname.split('/')[1];return m&&p?m[1]+'/'+p:null}
+function init(){
+  var t=(navigator.language||'es').slice(0,2).toLowerCase()==='en'?T.en:T.es;
+  document.documentElement.lang=t===T.en?'en':'es';
+  ['intro','privacy','h1','t1','dl','h2','t2','t2b','h3','t3','h4','t4','open'].forEach(function(id){document.getElementById(id).textContent=t[id]});
+  var repo=repoFrom(location),dl=document.getElementById('dl');
+  if(repo){dl.setAttribute('href','https://github.com/'+repo+'/releases/latest/download/kinet-beta.apk')}else{dl.setAttribute('aria-disabled','true');dl.removeAttribute('href')}
+  var code=parseCode(location.hash),open=document.getElementById('open'),box=document.getElementById('code'),no=document.getElementById('nocode');
+  if(code){box.textContent=code;box.hidden=false;open.setAttribute('href','kinet-preview://invite?code='+code);open.setAttribute('aria-disabled','false');no.textContent=t.copy}else{no.textContent=t.nocode}
+}
+if(typeof document!=='undefined'&&document.getElementById)init();
+</script>
+</body>
+</html>
